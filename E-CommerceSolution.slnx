@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/ApplicationCoreLayer/">
+    <Project Path="ECommerce.Domain/ECommerce.Domain.csproj" Id="1b38f8db-a764-4a04-9d40-3864903a9a90" />
+    <Project Path="ECommerce.Services.Abstraction/ECommerce.Services.Abstraction.csproj" Id="42a7b0bc-4b11-428b-b504-0d9d104f0cea" />
+    <Project Path="ECommerce.Services/ECommerce.Services.csproj" Id="6b48bc26-5d25-4ccd-98cd-b7d5124b8af6" />
+  </Folder>
+  <Folder Name="/InfrastructureLayer/">
+    <Project Path="ECommerce.Persistence/ECommerce.Persistence.csproj" Id="6dec810d-2298-493b-bdd3-46cbe7399615" />
+  </Folder>
+  <Folder Name="/PersentationLayer/">
+    <Project Path="E-Commerce.Web/E-Commerce.Web.csproj" />
+    <Project Path="ECommerce.Presentation/ECommerce.Presentation.csproj" Id="d57cde15-1cd5-48a0-90df-7232dff2146f" />
+  </Folder>
+  <Project Path="ECommerce.Shared/ECommerce.Shared.csproj" Id="d99ec188-1ae8-43c1-928d-75ceef16c945" />
+</Solution>
