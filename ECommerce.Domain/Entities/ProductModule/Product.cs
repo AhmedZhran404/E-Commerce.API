@@ -24,8 +24,6 @@ namespace ECommerce.Domain.Entities.ProductModule
         public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; } = default!;
 
-
-
         #endregion
 
     }
