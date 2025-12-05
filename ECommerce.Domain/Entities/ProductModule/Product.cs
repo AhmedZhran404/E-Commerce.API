@@ -12,7 +12,7 @@ namespace ECommerce.Domain.Entities.ProductModule
 
         public string Description { get; set; } = default!;
 
-        public string PrictureUrl { get; set; } = default!;
+        public string PictureUrl { get; set; } = default!;
 
         public decimal  Price { get; set; }
 
