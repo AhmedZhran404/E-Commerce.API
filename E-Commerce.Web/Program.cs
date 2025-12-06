@@ -38,7 +38,8 @@ namespace E_Commerce.Web
 
             builder.Services.AddScoped<IProductService, ProductService>();
 
-            builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
+             builder.Services.AddAutoMapper(typeof(ServiceAssemblyReference).Assembly);
+
             
             #endregion
 
@@ -58,6 +59,7 @@ namespace E_Commerce.Web
                 app.UseSwaggerUI();
             }
 
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
