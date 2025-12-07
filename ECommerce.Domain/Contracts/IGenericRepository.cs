@@ -10,7 +10,10 @@ namespace ECommerce.Domain.Contracts
     public interface IGenericRepository<TEntity , Tkey> where TEntity : BaseEntity<Tkey>
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
+
+        Task<IEnumerable<TEntity>> GetAllAsync(ISpacifications<TEntity , Tkey> specifications);
         Task<TEntity?> GetByIdAsync(Tkey id);
+        Task<TEntity?> GetByIdAsync(ISpacifications<TEntity , Tkey> specifications);
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
