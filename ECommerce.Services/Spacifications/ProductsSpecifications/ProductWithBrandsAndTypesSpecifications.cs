@@ -23,6 +23,28 @@ namespace ECommerce.Services.Spacifications.ProductsSpecifications
         {
             AddInclude(P => P.ProductBrand);
             AddInclude(P => P.ProductType);
+
+            switch (queryParams.Sort)
+            {
+                case ProductSortingOptions.NameAsc:
+                    AddOrderByAsc(p => p.Name);
+                    break;
+                case ProductSortingOptions.NameDesc:
+                    AddOrderByDesc(p => p.Name);
+                    break;
+                case ProductSortingOptions.PriceAsc:
+                    AddOrderByAsc(p => p.Price);
+                    break;
+                case ProductSortingOptions.PriceDesc:
+                    AddOrderByDesc(p => p.Price);
+                    break;
+                default:
+                    AddOrderByAsc(p => p.Id);
+                    break;
+            }
+
+
+
         }
 
         public ProductWithBrandsAndTypesSpecifications(int id):base(P => P.Id == id)
