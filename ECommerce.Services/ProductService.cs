@@ -30,12 +30,21 @@ namespace ECommerce.Services
             
         }
 
-        public async Task<IEnumerable<ProductDTO>> GetAllProductAsync(ProductQueryParams queryParams)
+        public async Task<PaginatedResult<ProductDTO>> GetAllProductAsync(ProductQueryParams queryParams)
         {
-            //GetAllProductWithBrandsAndTypes
+           
+            var ProdectElement =  _unitOfWork.GetRepository<Product, int>();
+
             var spec = new ProductWithBrandsAndTypesSpecifications(queryParams);
-              var Products = await _unitOfWork.GetRepository<Product , int>().GetAllAsync(spec);
-              return _mapper.Map<IEnumerable<ProductDTO>>(Products);
+            var Products = await ProdectElement.GetAllAsync(spec);
+            var DataToResult =  _mapper.Map<IEnumerable<ProductDTO>>(Products);
+            var CountOfResultData = DataToResult.Count();
+
+            var CountSpec = new ProductWithCountspecifications(queryParams);
+            var CountOverAll = await ProdectElement.CountAsync(CountSpec);
+
+
+            return new PaginatedResult<ProductDTO>(queryParams.PageIndex, CountOfResultData, CountOverAll, DataToResult);
         }
 
         public async Task<IEnumerable<TypeDTO>> GetAllTypesAsync()

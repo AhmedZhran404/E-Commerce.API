@@ -12,14 +12,7 @@ namespace ECommerce.Services.Spacifications.ProductsSpecifications
     internal class ProductWithBrandsAndTypesSpecifications : BaseSpacification<Product , int>
     {
         public ProductWithBrandsAndTypesSpecifications(ProductQueryParams queryParams)
-            :base(
-                     P => 
-                     (!queryParams.brandId.HasValue || P.ProductBrandId == queryParams.brandId.Value) 
-                     &&
-                     (!queryParams.typeId.HasValue || P.ProductTypeId == queryParams.typeId.Value)
-                     &&
-                     (string.IsNullOrEmpty(queryParams.search) || P.Name.ToLower().Contains(queryParams.search.ToLower()))
-            )
+            :base(ProductSpecificationHelper.critariaFunc(queryParams))
         {
             AddInclude(P => P.ProductBrand);
             AddInclude(P => P.ProductType);
@@ -45,6 +38,8 @@ namespace ECommerce.Services.Spacifications.ProductsSpecifications
 
 
 
+
+            ApplyPagenation(queryParams.PageIndex, queryParams.PageSize);
         }
 
         public ProductWithBrandsAndTypesSpecifications(int id):base(P => P.Id == id)

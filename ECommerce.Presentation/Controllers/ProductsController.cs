@@ -24,7 +24,7 @@ namespace ECommerce.Presentation.Controllers
         // Get All Products
         [HttpGet]
         // GET: baseUrl/api/Products
-        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetAllProducts([FromQuery] ProductQueryParams queryParams)
+        public async Task<ActionResult<PaginatedResult<ProductDTO>>> GetAllProducts([FromQuery] ProductQueryParams queryParams)
         {
             var Products = await _productService.GetAllProductAsync(queryParams);
             return Ok(Products);
