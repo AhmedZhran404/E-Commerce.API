@@ -1,5 +1,7 @@
 
+using E_Commerce.Web.CustomMiddlewares;
 using E_Commerce.Web.Extensions;
+using E_Commerce.Web.Factories;
 using ECommerce.Domain.Contracts;
 using ECommerce.Persistence.Data.DataSeeding;
 using ECommerce.Persistence.Data.DbContexts;
@@ -7,6 +9,7 @@ using ECommerce.Persistence.Repositories;
 using ECommerce.Services;
 using ECommerce.Services.Abstraction;
 using ECommerce.Services.MappingProfiles;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using System.Threading.Tasks;
@@ -43,9 +46,9 @@ namespace E_Commerce.Web
 
             builder.Services.AddScoped<IBasketService, BasketService>();
 
-            builder.Services.AddScoped<ICacheRepository , CacheRepository>();
+            builder.Services.AddScoped<ICacheRepository, CacheRepository>();
 
-            builder.Services.AddScoped<ICacheService , CacheService>();
+            builder.Services.AddScoped<ICacheService, CacheService>();
 
 
 
@@ -55,6 +58,12 @@ namespace E_Commerce.Web
             builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
             {
                 return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")!);
+            });
+
+
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResposeFactory.GenerateApiValidationRespose;
             });
 
             #endregion
@@ -68,6 +77,11 @@ namespace E_Commerce.Web
 
 
             #region Configure PipLine [Middleware]
+
+            //Custom Middleware
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
