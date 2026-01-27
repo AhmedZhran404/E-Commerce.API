@@ -44,8 +44,8 @@ namespace ECommerce.Services
             var CountSpec = new ProductWithCountspecifications(queryParams);
             var CountOverAll = await ProdectElement.CountAsync(CountSpec);
 
-
             return new PaginatedResult<ProductDTO>(queryParams.PageIndex, CountOfResultData, CountOverAll, DataToResult);
+
         }
 
         public async Task<IEnumerable<TypeDTO>> GetAllTypesAsync()
