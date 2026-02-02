@@ -3,15 +3,22 @@ using E_Commerce.Web.CustomMiddlewares;
 using E_Commerce.Web.Extensions;
 using E_Commerce.Web.Factories;
 using ECommerce.Domain.Contracts;
+using ECommerce.Domain.Entities.IdentityModule;
 using ECommerce.Persistence.Data.DataSeeding;
 using ECommerce.Persistence.Data.DbContexts;
+using ECommerce.Persistence.IdentityData.DataSeed;
+using ECommerce.Persistence.IdentityData.DbContexts;
 using ECommerce.Persistence.Repositories;
 using ECommerce.Services;
 using ECommerce.Services.Abstraction;
 using ECommerce.Services.MappingProfiles;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace E_Commerce.Web
@@ -36,7 +43,8 @@ namespace E_Commerce.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddScoped<IDataInitializer, DataInitializer>();
+            builder.Services.AddKeyedScoped<IDataInitializer, DataInitializer>("Default");
+            builder.Services.AddKeyedScoped<IDataInitializer, IdentityDataInitializer>("Identity");
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -48,10 +56,8 @@ namespace E_Commerce.Web
 
             builder.Services.AddScoped<ICacheRepository, CacheRepository>();
 
+          
             builder.Services.AddScoped<ICacheService, CacheService>();
-
-
-
             builder.Services.AddAutoMapper(typeof(ServiceAssemblyReference).Assembly);
 
 
@@ -66,14 +72,48 @@ namespace E_Commerce.Web
                 options.InvalidModelStateResponseFactory = ApiResposeFactory.GenerateApiValidationRespose;
             });
 
+            builder.Services.AddDbContext<StoreIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
+
+            // builder.Services.AddIdentity<ApplicatonUser , IdentityRole>();
+
+            builder.Services.AddIdentityCore<ApplicatonUser>()
+                            .AddRoles<IdentityRole>()
+                            .AddEntityFrameworkStores<StoreIdentityDbContext>();
+
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = builder.Configuration["JWTOptions:Issuer"],
+                    ValidAudience = builder.Configuration["JWTOptions:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTOptions:SecretKey"]!))
+                };
+            });
+
             #endregion
 
 
             var app = builder.Build();
 
             await app.MigrateDataBaseAsync();
-
+            await app.MigrateIdentityDataBaseAsync();
             await app.SeedDataAsync();
+            await app.SeedIdentityDataAsync();
+
+
 
 
             #region Configure PipLine [Middleware]
@@ -91,6 +131,8 @@ namespace E_Commerce.Web
 
             app.UseStaticFiles();
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
