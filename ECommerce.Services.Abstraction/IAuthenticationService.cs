@@ -1,5 +1,6 @@
 ﻿using ECommerce.Shared.CommonResposes;
 using ECommerce.Shared.IdentityDTOs;
+using ECommerce.Shared.OrdersDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +23,9 @@ namespace ECommerce.Services.Abstraction
         // Email => Result of UserDTO [Email - DisplayName - Token]
         // If Found User in Database , If Not Found Return [NotFoundError]
         Task<Result<UserDTO>> GetUserByEmailAsync(string email);
+
+        Task<Result<AddressDTO>> GetUserAddressAsync(string email);
+
+        Task<Result<AddressDTO>> UpdatedUserAddress(AddressDTO addressDTO , string email);
     }
 }
