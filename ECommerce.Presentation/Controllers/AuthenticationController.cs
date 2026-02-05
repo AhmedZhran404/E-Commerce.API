@@ -1,6 +1,7 @@
 ﻿using ECommerce.Services.Abstraction;
 using ECommerce.Shared.CommonResposes;
 using ECommerce.Shared.IdentityDTOs;
+using ECommerce.Shared.OrdersDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,6 @@ namespace ECommerce.Presentation.Controllers
             return HandleResult<UserDTO>(result);
         }
 
-        
         [HttpGet("emailExists")]
         public async Task<ActionResult<bool>> CheckEmail(string email)
         {
@@ -52,13 +52,28 @@ namespace ECommerce.Presentation.Controllers
         [HttpGet("CurrentUser")]
         public  async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
-            var email = User.FindFirstValue(ClaimTypes.Email);
-
-            var Result = await _authenticationService.GetUserByEmailAsync(email!);
+            var Result = await _authenticationService.GetUserByEmailAsync(GetEmailFromToken());
 
             return HandleResult(Result);
         }
 
+        [Authorize]
+        [HttpGet("Address")]
+        public async Task<ActionResult<AddressDTO>> GetUserAddress()
+        {
+            var result = await _authenticationService.GetUserAddressAsync(GetEmailFromToken());
+
+            return HandleResult(result);
+        }
+
+        [Authorize]
+        [HttpPost("Address")]
+        public async Task<ActionResult<AddressDTO>> UpdateUserAddress(AddressDTO addressDTO)
+        {
+            var result = await _authenticationService.UpdatedUserAddress(addressDTO , GetEmailFromToken());
+
+            return HandleResult(result);
+        }
 
 
 

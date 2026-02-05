@@ -37,8 +37,8 @@ namespace ECommerce.Persistence.Repositories
         public async Task<CustomerBasket?> GetBasketAsync(string basketId)
         {
             var BasketReturned = await _database.StringGetAsync(basketId);
-
-            if(BasketReturned.IsNullOrEmpty)
+           
+            if (BasketReturned.IsNullOrEmpty)
                 return null;
             else 
                 return JsonSerializer.Deserialize<CustomerBasket>(BasketReturned!);

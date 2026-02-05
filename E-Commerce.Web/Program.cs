@@ -55,6 +55,7 @@ namespace E_Commerce.Web
             builder.Services.AddScoped<IBasketService, BasketService>();
 
             builder.Services.AddScoped<ICacheRepository, CacheRepository>();
+            builder.Services.AddScoped<IOrderSevice, OrderService>();
 
           
             builder.Services.AddScoped<ICacheService, CacheService>();
