@@ -115,7 +115,7 @@ namespace ECommerce.Services
             {
                 Email = registerDTO.Email,
                 DisplayName = registerDTO.DisplayName,
-                PhoneNumber = registerDTO.Phone,
+                PhoneNumber = registerDTO.PhoneNumber,
                 UserName = registerDTO.UserName,
             };
 

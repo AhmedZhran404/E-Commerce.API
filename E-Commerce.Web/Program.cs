@@ -46,6 +46,18 @@ namespace E_Commerce.Web
             builder.Services.AddKeyedScoped<IDataInitializer, DataInitializer>("Default");
             builder.Services.AddKeyedScoped<IDataInitializer, IdentityDataInitializer>("Identity");
 
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("DevelopmentPolicy", builder =>
+                {
+                    builder.AllowAnyHeader()
+                           .AllowAnyOrigin()
+                           .AllowAnyMethod();
+                    
+                });
+            });
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddScoped<IProductService, ProductService>();
@@ -133,6 +145,7 @@ namespace E_Commerce.Web
             app.UseStaticFiles();
             app.UseHttpsRedirection();
 
+            app.UseCors("DevelopmentPolicy");
             app.UseAuthentication();
 
             app.UseAuthorization();
