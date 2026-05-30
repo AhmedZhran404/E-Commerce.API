@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Shared.IdentityDTOs
 {
-    public record RegisterDTO([EmailAddress] string Email , string DisplayName , string UserName , string Password, [Phone] string Phone);
+    public record RegisterDTO([EmailAddress] string Email , string DisplayName , string UserName , string Password, [Phone] string PhoneNumber);
     
 }

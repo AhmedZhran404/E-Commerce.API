@@ -44,9 +44,6 @@ namespace ECommerce.Services
             if (user is null)
                 return Error.NotFound("User.Notfound", $"User Not found With This Email:{email}");
 
-            if(user.Address is null)
-                return Error.NotFound("Address.Notfound", $"Address Not found for This User");
-
             var AddressDto = _mapper.Map<AddressDTO>(user.Address);
 
             return AddressDto;
@@ -115,7 +112,7 @@ namespace ECommerce.Services
             {
                 Email = registerDTO.Email,
                 DisplayName = registerDTO.DisplayName,
-                PhoneNumber = registerDTO.Phone,
+                PhoneNumber = registerDTO.PhoneNumber,
                 UserName = registerDTO.UserName,
             };
 
