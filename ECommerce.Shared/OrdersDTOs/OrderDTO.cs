@@ -11,7 +11,7 @@ namespace ECommerce.Shared.OrdersDTOs
         public string BasketId { get; init; } = default!;
         public int DeliveryMethodId { get; init; }
 
-        public AddressDTO Address { get; init; } = default!;
+        public AddressDTO ShipToAddress { get; init; } = default!;
 
 
     }

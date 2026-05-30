@@ -37,12 +37,14 @@ namespace ECommerce.Services
 
 
             //1- Maps the provided shipping address to the order address entity.
-            var OrderAddress = _mapper.Map<OrderAddress>(orderDTO.Address);
+            var OrderAddress = _mapper.Map<OrderAddress>(orderDTO.ShipToAddress);
 
             //2-Retrieves the basket and validates its existence.
             var basket = await _basketRepository.GetBasketAsync(orderDTO.BasketId);
             if (basket is null)
                return Error.NotFound("Basket.NotFound", $"Basket With Id:{orderDTO.BasketId} Is Not Found");
+            if (basket.PaymentIntentID is null)
+                return Error.Validation("PaymentIntent.NotFound");
             //3-Creates a list of order items by fetching product details from the database and validating each product.
             List<OrderItem> orderItems = new List<OrderItem>();
             foreach (var item in basket!.Items)
@@ -65,12 +67,20 @@ namespace ECommerce.Services
 
             //5-Calculates the subtotal of the order based on the items and their quantities.
             var subTotal = orderItems.Sum(OI => OI.Price * OI.Quantity);
+            var orderSpec = new OrderWithPaymentIntentSpec(basket.PaymentIntentID);
+            var OrderRepo = _unitOfWork.GetRepository<Order, Guid>();
+            var orderExistWithThisPaymentIntent = await OrderRepo.GetByIdAsync(orderSpec);
+            if(orderExistWithThisPaymentIntent is not null)
+            {
+                OrderRepo.Delete(orderExistWithThisPaymentIntent);
+            }    
             //6-Creates a new Order with all relevant details.
             var order = new Order()
             {
                 UserEmail = email,
                 Address = OrderAddress,
                 DeliveryMethod = deliveryMethod,
+                PaymentIntentId = basket.PaymentIntentID,
                 Items = orderItems,
                 SubTotal = subTotal
 

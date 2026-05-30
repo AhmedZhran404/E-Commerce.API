@@ -68,7 +68,7 @@ namespace E_Commerce.Web
 
             builder.Services.AddScoped<ICacheRepository, CacheRepository>();
             builder.Services.AddScoped<IOrderSevice, OrderService>();
-
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
           
             builder.Services.AddScoped<ICacheService, CacheService>();
             builder.Services.AddAutoMapper(typeof(ServiceAssemblyReference).Assembly);
