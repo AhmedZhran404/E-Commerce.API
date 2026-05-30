@@ -68,14 +68,6 @@ namespace ECommerce.Presentation.Controllers
             return HandleResult(result);
         }
 
-        [Authorize]
-        [HttpGet("address")]
-        public async Task<ActionResult<AddressDTO>> GetUserAddress()
-        {
-            var result = await _authenticationService.GetUserAddressAsync(GetEmailFromToken());
-
-            return HandleResult(result);
-        }
 
         [Authorize]
         [HttpPut("address")]
