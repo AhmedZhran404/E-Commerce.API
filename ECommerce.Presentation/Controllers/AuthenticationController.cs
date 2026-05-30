@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Presentation.Controllers
 {
+    // Authentication/address
+    // Authentication
     public class AuthenticationController : ApiBaseControllers
     {
         private readonly IAuthenticationService _authenticationService;
@@ -66,8 +68,9 @@ namespace ECommerce.Presentation.Controllers
             return HandleResult(result);
         }
 
+
         [Authorize]
-        [HttpPost("Address")]
+        [HttpPut("address")]
         public async Task<ActionResult<AddressDTO>> UpdateUserAddress(AddressDTO addressDTO)
         {
             var result = await _authenticationService.UpdatedUserAddress(addressDTO , GetEmailFromToken());
