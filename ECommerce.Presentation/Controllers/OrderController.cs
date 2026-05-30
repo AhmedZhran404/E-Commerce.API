@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Presentation.Controllers
 {
-    public class OrderController : ApiBaseControllers
+    public class OrdersController : ApiBaseControllers
     {
         private readonly IOrderSevice _orderSevice;
 
-        public OrderController(IOrderSevice orderSevice)
+        public OrdersController(IOrderSevice orderSevice)
         {
             _orderSevice = orderSevice;
         }
