@@ -120,7 +120,8 @@ namespace ECommerce.Services
         public async Task UpdateOrderPaymentStatus(string request, string stripeSignature)
         {
             var endpointSecret = _configuration["Stripe:EndpointSecret"];
-            var stripeEvent = EventUtility.ConstructEvent(request, stripeSignature, endpointSecret);
+            var stripeEvent = EventUtility.ParseEvent(request, throwOnApiVersionMismatch: true);
+             stripeEvent = EventUtility.ConstructEvent(request, stripeSignature, endpointSecret , throwOnApiVersionMismatch:true);
 
             var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
             Console.WriteLine(paymentIntent!.Id);
