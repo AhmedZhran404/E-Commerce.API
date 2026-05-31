@@ -1,6 +1,7 @@
 ﻿using ECommerce.Services.Abstraction;
 using ECommerce.Shared.BasketDTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,16 @@ namespace ECommerce.Presentation.Controllers
             var result = await _paymentService.CreateOrUpdatePaymentAsync(basketId);
             return HandleResult(result);
         }
+
+        [HttpPost("webhock")]
+        public async Task<IActionResult> WebHock()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            var stripeSignature = Request.Headers["Stripe-Signature"];
+            await _paymentService.UpdateOrderPaymentStatus(json, stripeSignature!);
+            return new EmptyResult();
+        }
+           
 
     }
 }

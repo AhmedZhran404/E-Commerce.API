@@ -11,5 +11,7 @@ namespace ECommerce.Services.Abstraction
     public interface IPaymentService
     {
         Task<Result<BasketDTO>> CreateOrUpdatePaymentAsync(string basketId);
+
+        Task UpdateOrderPaymentStatus(string request , string stripeSignature);
     }
 }
